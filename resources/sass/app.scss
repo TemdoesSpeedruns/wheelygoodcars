@@ -1,0 +1,87 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
+
+// Variables
+$primary:	hsl(28, 100%, 50%);
+$secondary:	hsl(28, 100%, 45%);
+$light:		hsl(30, 23%, 95%);
+$dark:      hsl(28, 10%, 14%);
+$gray:		hsl(28, 10%, 97%);
+
+// Bootstrap
+@import 'bootstrap/scss/bootstrap';
+
+// Typography
+$font-family-sans-serif: 'Open Sans', sans-serif;
+
+.fullheight{
+    min-height: calc(100vh - 56px) !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.license-plate-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 80px;
+}
+
+.license-plate {
+    display: flex;
+    align-items: center;
+    background: #f7d800;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 2px solid #caa000;
+}
+
+.license-country {
+    background: #003399;
+    color: white;
+    padding: 10px 12px;
+    font-weight: bold;
+}
+
+.license-input {
+    border: none;
+    padding: 10px;
+    font-size: 18px;
+    background: #f7d800;
+    outline: none;
+    width: 200px;
+}
+
+.license-button {
+    background: #b86a1f;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    cursor: pointer;
+}
+
+.license-button:hover {
+    background: #9a5618;
+}
+
+.car-form {
+    max-width: 500px;
+    margin: 40px auto;
+}
+
+.car-form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.car-form button {
+    background: #b86a1f;
+    color: white;
+    border: none;
+    padding: 12px;
+    width: 100%;
+    cursor: pointer;
+}

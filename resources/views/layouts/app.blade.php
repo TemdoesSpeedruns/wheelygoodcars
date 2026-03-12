@@ -26,7 +26,9 @@
 
                         @auth
                             <li class="nav-item">
-                                <a class="nav-link text-light" href="">Mijn aanbod</a>
+                                 <a class="nav-link text-light" href="{{ route('cars.index') }}">Mijn aanbod</a>
+                            </li>
+
                             </li>
 
                             <li class="nav-item">

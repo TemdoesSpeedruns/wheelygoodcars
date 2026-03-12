@@ -25,6 +25,15 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/cars/store', [CarController::class, 'store'])
         ->name('cars.store');
+    
+    Route::get('/cars/mine', [CarController::class, 'mine'])
+    ->middleware('auth')
+    ->name('cars.mine');
+    Route::get('/cars', [CarController::class, 'index'])->name('cars.index');
+
+    Route::delete('/cars/{car}', [CarController::class, 'destroy'])->name('cars.destroy');
+
+
 
 });
 

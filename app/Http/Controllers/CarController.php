@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Car; 
+use App\Models\Car;
 
 class CarController extends Controller
 {
@@ -40,6 +40,24 @@ class CarController extends Controller
 
         Car::create($validated);
 
-        return redirect('/')->with('success', 'Car added!');
+        return redirect()->route('cars.index')->with('success', 'Auto toegevoegd!');
     }
+    public function index()
+    {
+        $cars = Car::where('user_id', auth()->id())->get();
+        return view('cars.index', compact('cars'));
+    }
+
+    public function destroy(Car $car)
+    {
+        if ($car->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $car->delete();
+
+        return redirect()->route('cars.index')->with('success', 'Auto verwijderd!');
+    }
+
+
 }

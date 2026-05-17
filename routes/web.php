@@ -8,6 +8,19 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+/*
+|--------------------------------------------------------------------------
+| PUBLIC (F2 - geen login nodig)
+|--------------------------------------------------------------------------
+*/
+Route::get('/cars', [CarController::class, 'index'])
+    ->name('cars.index');
+
+/*
+|--------------------------------------------------------------------------
+| AUTH ONLY
+|--------------------------------------------------------------------------
+*/
 Route::middleware('auth')->group(function () {
 
     Route::get('/cars/create', [CarController::class, 'create_step1'])
@@ -20,9 +33,6 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/cars/store', [CarController::class, 'store'])
         ->name('cars.store');
-
-    Route::get('/cars', [CarController::class, 'index'])
-        ->name('cars.index');
 
     Route::get('/cars/mine', [CarController::class, 'mine'])
         ->name('cars.mine');
@@ -43,6 +53,11 @@ Route::middleware('auth')->group(function () {
         ->name('cars.updatePrice');
 });
 
+/*
+|--------------------------------------------------------------------------
+| ADMIN ONLY
+|--------------------------------------------------------------------------
+*/
 Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::get('/admin', [AdminController::class, 'dashboard'])

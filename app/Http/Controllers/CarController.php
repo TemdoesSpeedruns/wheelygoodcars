@@ -61,6 +61,8 @@ class CarController extends Controller
         ]);
 
         $validated['user_id'] = auth()->id();
+        $validated['views'] = 0;
+        $validated['sold_at'] = null;
 
         $car = Car::create($validated);
 
@@ -79,9 +81,12 @@ class CarController extends Controller
         return view('cars.mine', compact('cars'));
     }
 
+    // F2: PUBLIC LISTING (alleen niet-verkocht)
     public function index()
     {
-        $cars = Car::whereNull('sold_at')->get();
+        $cars = Car::whereNull('sold_at')
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         return view('cars.index', compact('cars'));
     }

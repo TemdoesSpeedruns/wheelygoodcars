@@ -64,6 +64,15 @@
                     <p><strong>Kilometerstand:</strong> {{ $car->mileage }}</p>
                     <p><strong>Prijs:</strong> €{{ number_format($car->price, 0, ',', '.') }}</p>
 
+                    {{-- TAGS --}}
+                    <div class="mb-2">
+                        @foreach($car->tags as $tag)
+                            <span class="badge bg-{{ $tag->color ?? 'secondary' }} me-1">
+                                {{ $tag->name }}
+                            </span>
+                        @endforeach
+                    </div>
+
                     <a href="{{ route('cars.show', $car->id) }}"
                        class="btn btn-success btn-sm">
                         Bekijken

@@ -75,7 +75,9 @@ class CarController extends Controller
 
     public function mine()
     {
-        $cars = Car::where('user_id', auth()->id())->get();
+        $cars = Car::with('tags')
+            ->where('user_id', auth()->id())
+            ->get();
 
         return view('cars.mine', compact('cars'));
     }
@@ -99,7 +101,9 @@ class CarController extends Controller
             });
         }
 
-        $cars = $query->orderBy('created_at', 'desc')
+        $cars = $query
+            ->with('tags')
+            ->orderBy('created_at', 'desc')
             ->paginate(9)
             ->withQueryString();
 

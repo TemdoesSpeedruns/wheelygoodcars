@@ -5,24 +5,37 @@
 
     <h1 class="mb-4">Alle auto's</h1>
 
+    <form method="GET" action="{{ route('cars.index') }}" class="mb-4">
+
+        <div class="input-group">
+            <input type="text"
+                   name="search"
+                   value="{{ request('search') }}"
+                   class="form-control"
+                   placeholder="Zoek op merk of model">
+
+            <button class="btn btn-primary">
+                Zoeken
+            </button>
+
+            @if(request('search'))
+                <a href="{{ route('cars.index') }}" class="btn btn-outline-secondary">
+                    Reset
+                </a>
+            @endif
+        </div>
+
+    </form>
+
     <div class="row g-3">
 
-        @foreach ($cars as $car)
+        @forelse ($cars as $car)
 
-            <div class="col-md-{{ isset($featuredId) && $car->id == $featuredId ? '8' : '4' }} mb-3">
+            <div class="col-md-4">
 
-                <div class="card shadow-sm p-3 h-100
-                    {{ isset($featuredId) && $car->id == $featuredId ? 'border border-warning' : '' }}">
+                <div class="card shadow-sm p-3 h-100">
 
-                    <h5>
-                        {{ $car->brand }} {{ $car->model }}
-
-                        @if(isset($featuredId) && $car->id == $featuredId)
-                            <span class="badge bg-warning text-dark ms-2">
-                                Uitgelicht
-                            </span>
-                        @endif
-                    </h5>
+                    <h5>{{ $car->brand }} {{ $car->model }}</h5>
 
                     <p><strong>Kenteken:</strong> {{ $car->license_plate }}</p>
                     <p><strong>Kilometerstand:</strong> {{ $car->mileage }}</p>
@@ -37,7 +50,13 @@
 
             </div>
 
-        @endforeach
+        @empty
+
+            <p class="text-muted">
+                Geen auto's gevonden.
+            </p>
+
+        @endforelse
 
     </div>
 

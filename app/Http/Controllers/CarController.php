@@ -82,13 +82,21 @@ class CarController extends Controller
         return view('cars.mine', compact('cars'));
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $cars = Car::whereNull('sold_at')
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $query = Car::whereNull('sold_at');
 
-        // F5: random featured car
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+                $q->where('brand', 'like', "%{$search}%")
+                  ->orWhere('model', 'like', "%{$search}%");
+            });
+        }
+
+        $cars = $query->orderBy('created_at', 'desc')->get();
+
         $featuredId = null;
 
         if ($cars->count() > 0) {

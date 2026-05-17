@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Car;
 use Illuminate\Support\Facades\Http;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class CarController extends Controller
 {
@@ -48,23 +49,32 @@ class CarController extends Controller
     {
         $validated = $request->validate([
             'license_plate' => 'required',
-            'make' => 'required',
+            'brand' => 'required',
             'model' => 'required',
             'mileage' => 'required|integer',
-            'price' => 'required|numeric'
+            'price' => 'required|numeric',
+            'production_year' => 'nullable|integer',
+            'color' => 'nullable|string',
         ]);
 
         $validated['user_id'] = auth()->id();
 
         Car::create($validated);
 
-        return redirect()->route('cars.index')
+        return redirect()->route('cars.mine')
             ->with('success', 'Auto toegevoegd!');
+    }
+
+    public function mine()
+    {
+        $cars = Car::where('user_id', auth()->id())->get();
+
+        return view('cars.mine', compact('cars'));
     }
 
     public function index()
     {
-        $cars = Car::where('user_id', auth()->id())->get();
+        $cars = Car::all();
 
         return view('cars.index', compact('cars'));
     }
@@ -77,7 +87,18 @@ class CarController extends Controller
 
         $car->delete();
 
-        return redirect()->route('cars.index')
+        return redirect()->route('cars.mine')
             ->with('success', 'Auto verwijderd!');
+    }
+
+    public function pdf(Car $car)
+    {
+        if ($car->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $pdf = Pdf::loadView('cars.pdf', compact('car'));
+
+        return $pdf->download('auto-' . $car->license_plate . '.pdf');
     }
 }

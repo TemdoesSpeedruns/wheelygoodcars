@@ -26,7 +26,6 @@ class Car extends Model
         'views',
     ];
 
-    // RELATIES
     public function tags()
     {
         return $this->belongsToMany(Tag::class);

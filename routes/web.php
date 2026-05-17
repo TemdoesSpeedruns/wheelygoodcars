@@ -3,12 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CarController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-*/
-
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
@@ -25,17 +19,22 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/cars/store', [CarController::class, 'store'])
         ->name('cars.store');
-    
+
     Route::get('/cars/mine', [CarController::class, 'mine'])
-    ->middleware('auth')
-    ->name('cars.mine');
-    Route::get('/cars', [CarController::class, 'index'])->name('cars.index');
+        ->name('cars.mine');
 
-    Route::delete('/cars/{car}', [CarController::class, 'destroy'])->name('cars.destroy');
+    Route::get('/cars', [CarController::class, 'index'])
+        ->name('cars.index');
 
+    Route::get('/cars/{car}', [CarController::class, 'show'])
+        ->name('cars.show');
 
+    Route::delete('/cars/{car}', [CarController::class, 'destroy'])
+        ->name('cars.destroy');
+
+    Route::get('/cars/{car}/pdf', [CarController::class, 'pdf'])
+        ->name('cars.pdf');
 
 });
 
 require __DIR__.'/auth.php';
-    

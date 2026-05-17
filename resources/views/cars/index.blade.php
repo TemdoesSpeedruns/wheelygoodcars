@@ -7,7 +7,8 @@
 
     <form method="GET" action="{{ route('cars.index') }}" class="mb-4">
 
-        <div class="input-group">
+        <div class="input-group mb-2">
+
             <input type="text"
                    name="search"
                    value="{{ request('search') }}"
@@ -18,11 +19,33 @@
                 Zoeken
             </button>
 
-            @if(request('search'))
+            @if(request('search') || request('tag'))
                 <a href="{{ route('cars.index') }}" class="btn btn-outline-secondary">
                     Reset
                 </a>
             @endif
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-4">
+
+                <select name="tag" class="form-select" onchange="this.form.submit()">
+
+                    <option value="">Alle tags</option>
+
+                    @foreach($tags as $tag)
+                        <option value="{{ $tag->id }}"
+                            {{ request('tag') == $tag->id ? 'selected' : '' }}>
+                            {{ $tag->name }}
+                        </option>
+                    @endforeach
+
+                </select>
+
+            </div>
+
         </div>
 
     </form>

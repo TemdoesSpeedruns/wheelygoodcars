@@ -95,8 +95,13 @@ class CarController extends Controller
             });
         }
 
-        $cars = $query
-            ->orderBy('created_at', 'desc')
+        if ($request->filled('tag')) {
+            $query->whereHas('tags', function ($q) use ($request) {
+                $q->where('tags.id', $request->tag);
+            });
+        }
+
+        $cars = $query->orderBy('created_at', 'desc')
             ->paginate(9)
             ->withQueryString();
 
@@ -106,7 +111,9 @@ class CarController extends Controller
             $featuredId = $cars->random()->id;
         }
 
-        return view('cars.index', compact('cars', 'featuredId'));
+        $tags = Tag::all();
+
+        return view('cars.index', compact('cars', 'featuredId', 'tags'));
     }
 
     public function show(Car $car)

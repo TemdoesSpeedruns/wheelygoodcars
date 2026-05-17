@@ -35,15 +35,19 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/cars/{car}/pdf', [CarController::class, 'pdf'])
         ->name('cars.pdf');
-
-    Route::middleware('admin')->group(function () {
-
-        Route::get('/admin', [AdminController::class, 'dashboard'])
-            ->name('admin.dashboard');
-
-        Route::get('/admin/tags', [AdminController::class, 'tagStats'])
-            ->name('admin.tags.stats');
-    });
 });
 
+Route::middleware(['auth', 'admin'])->group(function () {
+
+    Route::get('/admin', [AdminController::class, 'dashboard'])
+        ->name('admin.dashboard');
+
+    Route::get('/admin/tags', [AdminController::class, 'tagStats'])
+        ->name('admin.tags.stats');
+    
+    Route::get('/admin/suspicious-users', [AdminController::class, 'suspiciousUsers'])
+    ->name('admin.suspicious.users');    
+    Route::post('/admin/users/{user}/ignore', [AdminController::class, 'ignoreUser'])
+    ->name('admin.users.ignore');
+});
 require __DIR__.'/auth.php';

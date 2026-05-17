@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Car;
+use App\Models\Tag;
 use Illuminate\Support\Facades\Http;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -34,15 +35,17 @@ class CarController extends Controller
             ]);
         }
 
-        return view('cars.create_step2', [
-            'license_plate' => $request->license_plate,
-            'rdw' => $carData[0]
-        ]);
+        $request->session()->put('rdw', $carData[0]);
+
+        return redirect()->route('cars.create.step2', $licensePlate);
     }
 
     public function create_step2($license_plate)
     {
-        return view('cars.create_step2', compact('license_plate'));
+        $tags = Tag::all();
+        $rdw = session('rdw');
+
+        return view('cars.create_step2', compact('license_plate', 'tags', 'rdw'));
     }
 
     public function store(Request $request)
@@ -59,7 +62,11 @@ class CarController extends Controller
 
         $validated['user_id'] = auth()->id();
 
-        Car::create($validated);
+        $car = Car::create($validated);
+
+        if ($request->has('tags')) {
+            $car->tags()->attach($request->tags);
+        }
 
         return redirect()->route('cars.mine')
             ->with('success', 'Auto toegevoegd!');

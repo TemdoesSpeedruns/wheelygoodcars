@@ -9,8 +9,27 @@ class TagFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->unique()->word(),
-            'color' => fake()->safeColorName(),
+            'name' => fake()->randomElement([
+                'SUV',
+                'Sedan',
+                'Hatchback',
+                'Cabrio',
+                'Elektrisch',
+                'Hybride',
+                'Sport',
+                'Diesel',
+                'Benzine',
+                'Automaat',
+                'Handgeschakeld',
+                '4x4'
+            ]),
+            'color' => fake()->randomElement([
+                'primary',
+                'success',
+                'warning',
+                'danger',
+                'info'
+            ]),
         ];
     }
 }

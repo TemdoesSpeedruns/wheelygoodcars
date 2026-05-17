@@ -8,11 +8,7 @@
     <form method="POST" action="{{ route('cars.store') }}">
         @csrf
 
-        <input
-            type="hidden"
-            name="license_plate"
-            value="{{ $license_plate }}"
-        >
+        <input type="hidden" name="license_plate" value="{{ $license_plate }}">
 
         <input
             type="text"
@@ -21,14 +17,12 @@
             value="{{ $rdw['merk'] ?? '' }}"
         >
 
-
         <input
             type="text"
             name="model"
             placeholder="Model"
             value="{{ $rdw['handelsbenaming'] ?? '' }}"
         >
-
 
         <input
             type="number"
@@ -57,7 +51,28 @@
             value="{{ $rdw['kleur'] ?? '' }}"
         >
 
-        <button>Aanbod afronden</button>
+        <hr>
+
+        <h5>Tags</h5>
+
+        <div class="tags-box">
+
+            @if(isset($tags) && count($tags))
+                @foreach($tags as $tag)
+                    <label class="tag-item">
+                        <input type="checkbox" name="tags[]" value="{{ $tag->id }}">
+                        <span>{{ $tag->name }}</span>
+                    </label>
+                @endforeach
+            @else
+                <p>Geen tags gevonden</p>
+            @endif
+
+        </div>
+
+        <br>
+
+        <button type="submit">Aanbod afronden</button>
 
     </form>
 

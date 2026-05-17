@@ -30,9 +30,15 @@
 
     </div>
 
-    <a href="{{ route('admin.tags.stats') }}" class="btn btn-primary mt-4">
-        Bekijk tag statistieken
-    </a>
+    <div class="mt-4">
+        <a href="{{ route('admin.tags.stats') }}" class="btn btn-primary">
+            Tag statistieken
+        </a>
+
+        <a href="{{ route('admin.suspicious.users') }}" class="btn btn-danger">
+            Opvallende aanbieders
+        </a>
+    </div>
 
 </div>
 @endsection

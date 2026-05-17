@@ -88,7 +88,14 @@ class CarController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('cars.index', compact('cars'));
+        // F5: random featured car
+        $featuredId = null;
+
+        if ($cars->count() > 0) {
+            $featuredId = $cars->random()->id;
+        }
+
+        return view('cars.index', compact('cars', 'featuredId'));
     }
 
     public function show(Car $car)

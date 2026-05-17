@@ -39,6 +39,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/cars/mine', [CarController::class, 'mine'])
         ->name('cars.mine');
 
+    Route::get('/cars/{car}/edit', [CarController::class, 'edit'])
+        ->name('cars.edit');
+
+    Route::put('/cars/{car}', [CarController::class, 'update'])
+        ->name('cars.update');
+
     Route::delete('/cars/{car}', [CarController::class, 'destroy'])
         ->name('cars.destroy');
 
@@ -51,13 +57,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/cars/{car}/update-price', [CarController::class, 'updatePrice'])
         ->name('cars.updatePrice');
 });
-
-/*
-|--------------------------------------------------------------------------
-| PUBLIC DETAIL PAGE
-|--------------------------------------------------------------------------
-*/
-
+    
 Route::get('/cars/{car}', [CarController::class, 'show'])
     ->name('cars.show');
 

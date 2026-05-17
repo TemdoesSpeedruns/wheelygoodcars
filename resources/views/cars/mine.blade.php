@@ -14,6 +14,7 @@
                 <th>Model</th>
                 <th>Kilometerstand</th>
                 <th>Prijs</th>
+                <th>Tags</th>
                 <th>Status</th>
                 <th>Acties</th>
             </tr>
@@ -29,7 +30,6 @@
                     <td>{{ $car->mileage }}</td>
 
                     <td>
-
                         <div id="price-display-{{ $car->id }}">
                             €{{ number_format($car->price, 0, ',', '.') }}
 
@@ -69,7 +69,19 @@
                             </div>
 
                         </form>
+                    </td>
 
+                    <td>
+                        @foreach($car->tags as $tag)
+                            <span class="badge bg-{{ $tag->color ?? 'secondary' }}">
+                                {{ $tag->name }}
+                            </span>
+                        @endforeach
+
+                        <a href="{{ route('cars.edit', $car->id) }}"
+                           class="btn btn-sm btn-link d-block p-0 mt-1">
+                            tags aanpassen
+                        </a>
                     </td>
 
                     <td>

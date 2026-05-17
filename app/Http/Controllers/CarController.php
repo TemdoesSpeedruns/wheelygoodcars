@@ -67,9 +67,7 @@ class CarController extends Controller
 
         $car = Car::create($validated);
 
-        if ($request->has('tags')) {
-            $car->tags()->attach($request->tags);
-        }
+        $car->tags()->sync($request->tags ?? []);
 
         return redirect()->route('cars.mine')
             ->with('success', 'Auto toegevoegd!');
@@ -129,6 +127,40 @@ class CarController extends Controller
             ->count();
 
         return view('cars.show', compact('car', 'viewsToday'));
+    }
+
+    public function edit(Car $car)
+    {
+        if ($car->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $tags = Tag::all();
+
+        return view('cars.edit', compact('car', 'tags'));
+    }
+
+    public function update(Request $request, Car $car)
+    {
+        if ($car->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $validated = $request->validate([
+            'brand' => 'required',
+            'model' => 'required',
+            'mileage' => 'required|integer',
+            'price' => 'required|numeric',
+            'production_year' => 'nullable|integer',
+            'color' => 'nullable|string',
+        ]);
+
+        $car->update($validated);
+
+        $car->tags()->sync($request->tags ?? []);
+
+        return redirect()->route('cars.mine')
+            ->with('success', 'Auto aangepast!');
     }
 
     public function destroy(Car $car)

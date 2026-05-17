@@ -13,17 +13,16 @@ Route::get('/', function () {
 | PUBLIC ROUTES
 |--------------------------------------------------------------------------
 */
+
 Route::get('/cars', [CarController::class, 'index'])
     ->name('cars.index');
-
-Route::get('/cars/{car}', [CarController::class, 'show'])
-    ->name('cars.show');
 
 /*
 |--------------------------------------------------------------------------
 | AUTH ONLY
 |--------------------------------------------------------------------------
 */
+
 Route::middleware('auth')->group(function () {
 
     Route::get('/cars/create', [CarController::class, 'create_step1'])
@@ -55,9 +54,19 @@ Route::middleware('auth')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
+| PUBLIC DETAIL PAGE
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/cars/{car}', [CarController::class, 'show'])
+    ->name('cars.show');
+
+/*
+|--------------------------------------------------------------------------
 | ADMIN ONLY
 |--------------------------------------------------------------------------
 */
+
 Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::get('/admin', [AdminController::class, 'dashboard'])

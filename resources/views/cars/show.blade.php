@@ -34,4 +34,28 @@
     </div>
 
 </div>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="viewsToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Populair aanbod</strong>
+            <small>nu</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+        </div>
+        <div class="toast-body">
+         Deze auto is vandaag {{ $viewsToday }} keer bekeken. {{ $car->views }} totaal views.
+        </div>      
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    setTimeout(function () {
+        const toastEl = document.getElementById('viewsToast');
+        const toast = new bootstrap.Toast(toastEl);
+        toast.show();
+    }, 10000);
+});
+</script>
+
 @endsection

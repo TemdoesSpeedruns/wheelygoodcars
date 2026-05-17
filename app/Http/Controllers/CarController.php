@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Car;
 use App\Models\Tag;
+use App\Models\CarView;
 use Illuminate\Support\Facades\Http;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -81,7 +82,6 @@ class CarController extends Controller
         return view('cars.mine', compact('cars'));
     }
 
-    // F2: PUBLIC LISTING (alleen niet-verkocht)
     public function index()
     {
         $cars = Car::whereNull('sold_at')
@@ -95,7 +95,15 @@ class CarController extends Controller
     {
         $car->increment('views');
 
-        return view('cars.show', compact('car'));
+        CarView::create([
+            'car_id' => $car->id
+        ]);
+
+        $viewsToday = CarView::where('car_id', $car->id)
+            ->whereDate('created_at', today())
+            ->count();
+
+        return view('cars.show', compact('car', 'viewsToday'));
     }
 
     public function destroy(Car $car)

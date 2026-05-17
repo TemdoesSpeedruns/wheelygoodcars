@@ -6,7 +6,7 @@
     <title>WheelyGoodCars</title>
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <body>
 <nav class="navbar navbar-expand-md navbar-dark d-print-none bg-black">
     <div class="container-fluid">

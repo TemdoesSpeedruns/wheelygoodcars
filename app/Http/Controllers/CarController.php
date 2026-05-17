@@ -95,7 +95,10 @@ class CarController extends Controller
             });
         }
 
-        $cars = $query->orderBy('created_at', 'desc')->get();
+        $cars = $query
+            ->orderBy('created_at', 'desc')
+            ->paginate(9)
+            ->withQueryString();
 
         $featuredId = null;
 

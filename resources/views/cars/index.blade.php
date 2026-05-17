@@ -60,5 +60,9 @@
 
     </div>
 
+    <div class="mt-4">
+        {{ $cars->links() }}
+    </div>
+
 </div>
 @endsection

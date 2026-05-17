@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Car;
+use Illuminate\Support\Facades\Http;
 
 class CarController extends Controller
 {
@@ -18,7 +19,24 @@ class CarController extends Controller
             'license_plate' => 'required'
         ]);
 
-        return redirect('/cars/create/' . $request->license_plate);
+        $licensePlate = str_replace('-', '', $request->license_plate);
+
+        $response = Http::get(
+            'https://opendata.rdw.nl/resource/m9d7-ebf2.json?kenteken=' . $licensePlate
+        );
+
+        $carData = $response->json();
+
+        if (empty($carData)) {
+            return back()->withErrors([
+                'license_plate' => 'Kenteken niet gevonden'
+            ]);
+        }
+
+        return view('cars.create_step2', [
+            'license_plate' => $request->license_plate,
+            'rdw' => $carData[0]
+        ]);
     }
 
     public function create_step2($license_plate)
@@ -40,11 +58,14 @@ class CarController extends Controller
 
         Car::create($validated);
 
-        return redirect()->route('cars.index')->with('success', 'Auto toegevoegd!');
+        return redirect()->route('cars.index')
+            ->with('success', 'Auto toegevoegd!');
     }
+
     public function index()
     {
         $cars = Car::where('user_id', auth()->id())->get();
+
         return view('cars.index', compact('cars'));
     }
 
@@ -56,8 +77,7 @@ class CarController extends Controller
 
         $car->delete();
 
-        return redirect()->route('cars.index')->with('success', 'Auto verwijderd!');
+        return redirect()->route('cars.index')
+            ->with('success', 'Auto verwijderd!');
     }
-
-
 }

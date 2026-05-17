@@ -3,7 +3,13 @@
 @section('content')
 <div class="container">
 
-    <h1 class="mb-4">{{ $car->brand }} {{ $car->model }}</h1>
+    <h1 class="mb-2">
+        {{ $car->brand }} {{ $car->model }}
+    </h1>
+
+    <p class="text-muted">
+        Deze auto is {{ $car->views }} keer bekeken.
+    </p>
 
     <div class="card p-3 shadow-sm">
 

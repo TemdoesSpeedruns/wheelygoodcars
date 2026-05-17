@@ -10,11 +10,14 @@ Route::get('/', function () {
 
 /*
 |--------------------------------------------------------------------------
-| PUBLIC (F2 - geen login nodig)
+| PUBLIC ROUTES
 |--------------------------------------------------------------------------
 */
 Route::get('/cars', [CarController::class, 'index'])
     ->name('cars.index');
+
+Route::get('/cars/{car}', [CarController::class, 'show'])
+    ->name('cars.show');
 
 /*
 |--------------------------------------------------------------------------
@@ -36,9 +39,6 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/cars/mine', [CarController::class, 'mine'])
         ->name('cars.mine');
-
-    Route::get('/cars/{car}', [CarController::class, 'show'])
-        ->name('cars.show');
 
     Route::delete('/cars/{car}', [CarController::class, 'destroy'])
         ->name('cars.destroy');

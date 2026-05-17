@@ -35,6 +35,12 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/cars/{car}/pdf', [CarController::class, 'pdf'])
         ->name('cars.pdf');
+
+    Route::post('/cars/{car}/toggle-sold', [CarController::class, 'toggleSold'])
+        ->name('cars.toggleSold');
+
+    Route::post('/cars/{car}/update-price', [CarController::class, 'updatePrice'])
+        ->name('cars.updatePrice');
 });
 
 Route::middleware(['auth', 'admin'])->group(function () {
@@ -44,10 +50,12 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::get('/admin/tags', [AdminController::class, 'tagStats'])
         ->name('admin.tags.stats');
-    
+
     Route::get('/admin/suspicious-users', [AdminController::class, 'suspiciousUsers'])
-    ->name('admin.suspicious.users');    
+        ->name('admin.suspicious.users');
+
     Route::post('/admin/users/{user}/ignore', [AdminController::class, 'ignoreUser'])
-    ->name('admin.users.ignore');
+        ->name('admin.users.ignore');
 });
+
 require __DIR__.'/auth.php';

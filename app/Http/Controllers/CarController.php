@@ -81,7 +81,7 @@ class CarController extends Controller
 
     public function index()
     {
-        $cars = Car::all();
+        $cars = Car::whereNull('sold_at')->get();
 
         return view('cars.index', compact('cars'));
     }
@@ -89,8 +89,6 @@ class CarController extends Controller
     public function show(Car $car)
     {
         $car->increment('views');
-
-        $car->viewLogs()->create();
 
         return view('cars.show', compact('car'));
     }
@@ -116,5 +114,34 @@ class CarController extends Controller
         $pdf = Pdf::loadView('cars.pdf', compact('car'));
 
         return $pdf->download('auto-' . $car->license_plate . '.pdf');
+    }
+
+    public function toggleSold(Car $car)
+    {
+        if ($car->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $car->sold_at = $car->sold_at ? null : now();
+        $car->save();
+
+        return back();
+    }
+
+    public function updatePrice(Request $request, Car $car)
+    {
+        if ($car->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $request->validate([
+            'price' => 'required|numeric'
+        ]);
+
+        $car->update([
+            'price' => $request->price
+        ]);
+
+        return back();
     }
 }

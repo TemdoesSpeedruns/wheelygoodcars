@@ -134,3 +134,38 @@ $font-family-sans-serif: 'Open Sans', sans-serif;
     max-width: 500px;
     margin: 0 auto;
 }
+.price-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.price-input {
+    width: 110px;
+    padding: 4px 8px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    background: #f9f9f9;
+}
+
+.price-input:focus {
+    outline: none;
+    border-color: #0d6efd;
+    background: #fff;
+}
+
+.price-btn {
+    padding: 4px 10px;
+    border: none;
+    border-radius: 6px;
+    background: #0d6efd;
+    color: white;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.price-btn:hover {
+    background: #0b5ed7;
+}

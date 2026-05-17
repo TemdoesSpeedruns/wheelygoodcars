@@ -11,21 +11,25 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // 150 USERS
-        $users = User::factory(150)->create();
-
-        // 20 TAGS
-        $tags = Tag::factory(20)->create();
-
-        // 250 CARS
-        $cars = Car::factory(250)->create([
-            'user_id' => $users->random()->id,
+        $admin = User::factory()->create([
+            'name' => 'Admin',
+            'email' => 'djpangoro@admin.com',
+            'password' => bcrypt('adminpassword'),
+            'is_admin' => 1,
         ]);
 
-        foreach ($cars as $car) {
+        $users = User::factory(149)->create();
+
+        $tags = Tag::factory(20)->create();
+
+        Car::factory(250)->create()->each(function ($car) use ($users, $tags) {
+
+            $car->user_id = $users->random()->id;
+            $car->save();
+
             $car->tags()->attach(
                 $tags->random(rand(1, 3))->pluck('id')->toArray()
             );
-        }
+        });
     }
 }

@@ -22,7 +22,6 @@
 
         <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
 
-            <!-- LINKS LINKS -->
             <ul class="navbar-nav">
 
                 <li class="nav-item">
@@ -43,11 +42,18 @@
                             Aanbod plaatsen
                         </a>
                     </li>
+
+                    @if(auth()->user()->is_admin)
+                        <li class="nav-item">
+                            <a class="nav-link text-warning" href="{{ route('admin.dashboard') }}">
+                                Admin Dashboard
+                            </a>
+                        </li>
+                    @endif
                 @endauth
 
             </ul>
 
-            <!-- RECHTS -->
             <ul class="navbar-nav">
 
                 @guest
@@ -66,9 +72,12 @@
 
                 @auth
                     <li class="nav-item">
-                        <a class="nav-link text-secondary" href="{{ route('logout') }}">
-                            Uitloggen
-                        </a>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button class="nav-link text-secondary bg-transparent border-0">
+                                Uitloggen
+                            </button>
+                        </form>
                     </li>
                 @endauth
 

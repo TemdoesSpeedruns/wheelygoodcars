@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CarController;
+use App\Http\Controllers\AdminController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -20,11 +21,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/cars/store', [CarController::class, 'store'])
         ->name('cars.store');
 
-    Route::get('/cars/mine', [CarController::class, 'mine'])
-        ->name('cars.mine');
-
     Route::get('/cars', [CarController::class, 'index'])
         ->name('cars.index');
+
+    Route::get('/cars/mine', [CarController::class, 'mine'])
+        ->name('cars.mine');
 
     Route::get('/cars/{car}', [CarController::class, 'show'])
         ->name('cars.show');
@@ -35,6 +36,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/cars/{car}/pdf', [CarController::class, 'pdf'])
         ->name('cars.pdf');
 
+    Route::middleware('admin')->group(function () {
+
+        Route::get('/admin', [AdminController::class, 'dashboard'])
+            ->name('admin.dashboard');
+
+        Route::get('/admin/tags', [AdminController::class, 'tagStats'])
+            ->name('admin.tags.stats');
+    });
 });
 
 require __DIR__.'/auth.php';

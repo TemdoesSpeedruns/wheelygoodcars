@@ -3,7 +3,7 @@
 @section('content')
 <div class="car-form">
 
-    <h2>Nieuw aanbod</h2>
+    <h2>Nieuw aanbod - stap 2</h2>
 
     <form method="POST" action="{{ route('cars.store') }}">
         @csrf
@@ -16,10 +16,11 @@
 
         <input
             type="text"
-            name="make"
+            name="brand"
             placeholder="Merk"
             value="{{ $rdw['merk'] ?? '' }}"
         >
+
 
         <input
             type="text"
@@ -27,6 +28,7 @@
             placeholder="Model"
             value="{{ $rdw['handelsbenaming'] ?? '' }}"
         >
+
 
         <input
             type="number"
@@ -39,6 +41,20 @@
             name="price"
             placeholder="Vraagprijs"
             step="0.01"
+        >
+
+        <input
+            type="number"
+            name="production_year"
+            placeholder="Bouwjaar"
+            value="{{ $rdw['bouwjaar'] ?? '' }}"
+        >
+
+        <input
+            type="text"
+            name="color"
+            placeholder="Kleur"
+            value="{{ $rdw['kleur'] ?? '' }}"
         >
 
         <button>Aanbod afronden</button>

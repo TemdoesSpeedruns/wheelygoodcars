@@ -12,9 +12,28 @@ class Car extends Model
     protected $fillable = [
         'user_id',
         'license_plate',
-        'make',
+        'brand',
         'model',
         'price',
         'mileage',
+        'seats',
+        'doors',
+        'production_year',
+        'weight',
+        'color',
+        'image',
+        'sold_at',
+        'views',
     ];
+
+    // RELATIES
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

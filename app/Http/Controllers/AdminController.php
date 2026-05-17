@@ -6,15 +6,26 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Car;
 use App\Models\Tag;
+use App\Models\CarView;
 
 class AdminController extends Controller
 {
     public function dashboard()
     {
+        $activeUsers = User::has('cars')->count();
+
+        $avgCarsPerUser = $activeUsers > 0
+            ? Car::count() / $activeUsers
+            : 0;
+
         return view('admin.dashboard', [
             'totalCars' => Car::count(),
             'totalUsers' => User::count(),
             'totalTags' => Tag::count(),
+            'carsSold' => Car::whereNotNull('sold_at')->count(),
+            'carsToday' => Car::whereDate('created_at', today())->count(),
+            'viewsToday' => CarView::whereDate('created_at', today())->count(),
+            'avgCarsPerUser' => $avgCarsPerUser,
         ]);
     }
 

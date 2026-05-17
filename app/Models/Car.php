@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\CarView;
 
 class Car extends Model
 {
@@ -34,5 +35,10 @@ class Car extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function viewLogs()
+    {
+        return $this->hasMany(CarView::class);
     }
 }

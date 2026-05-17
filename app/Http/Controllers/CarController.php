@@ -86,6 +86,15 @@ class CarController extends Controller
         return view('cars.index', compact('cars'));
     }
 
+    public function show(Car $car)
+    {
+        $car->increment('views');
+
+        $car->viewLogs()->create();
+
+        return view('cars.show', compact('car'));
+    }
+
     public function destroy(Car $car)
     {
         if ($car->user_id !== auth()->id()) {

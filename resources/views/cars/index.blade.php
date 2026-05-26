@@ -54,7 +54,7 @@
 
         @forelse ($cars as $car)
 
-            <div class="col-md-4">
+            <div class="{{ $car->id === $featuredId ? 'col-md-8' : 'col-md-4' }}">
 
                 <div class="card shadow-sm p-3 h-100">
 

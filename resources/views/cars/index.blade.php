@@ -58,6 +58,15 @@
 
                 <div class="card shadow-sm p-3 h-100">
 
+                    {{-- IMAGE ADDED (nothing removed) --}}
+                    @if($car->image)
+                        <img src="{{ asset('storage/' . $car->image) }}"
+                             style="width:100%; height:200px; object-fit:cover; margin-bottom:10px;">
+                    @else
+                        <img src="{{ asset('images/no-car.png') }}"
+                             style="width:100%; height:200px; object-fit:cover; margin-bottom:10px;">
+                    @endif
+
                     <h5>{{ $car->brand }} {{ $car->model }}</h5>
 
                     <p><strong>Kenteken:</strong> {{ $car->license_plate }}</p>

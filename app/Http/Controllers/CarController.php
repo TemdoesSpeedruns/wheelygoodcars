@@ -8,6 +8,8 @@ use App\Models\Tag;
 use App\Models\CarView;
 use Illuminate\Support\Facades\Http;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class CarController extends Controller
 {
@@ -24,7 +26,7 @@ class CarController extends Controller
 
         $licensePlate = str_replace('-', '', $request->license_plate);
 
-        $response = Http::get(
+        $response = Http::timeout(15)->get(
             'https://opendata.rdw.nl/resource/m9d7-ebf2.json?kenteken=' . $licensePlate
         );
 
@@ -59,17 +61,64 @@ class CarController extends Controller
             'price' => 'required|numeric',
             'production_year' => 'nullable|integer',
             'color' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'tags' => 'nullable|array',
+            'tags.*' => 'exists:tags,id',
         ]);
 
-        $validated['user_id'] = auth()->id();
-        $validated['views'] = 0;
-        $validated['sold_at'] = null;
+        $imagePath = null;
 
-        $car = Car::create($validated);
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
 
-        $car->tags()->sync($request->tags ?? []);
+            if ($file && $file->isValid()) {
+                try {
+                    $tmpPath = $file->getPathname();
+                    if (empty($tmpPath)) {
+                        throw new \RuntimeException('Uploaded file temp path missing');
+                    }
 
-        return redirect()->route('cars.mine')
+                    $extension = $file->getClientOriginalExtension() ?: $file->guessExtension() ?: 'png';
+                    $filename = Str::uuid()->toString() . '.' . $extension;
+
+                    $targetDir = storage_path('app/public/cars');
+                    if (! is_dir($targetDir)) {
+                        mkdir($targetDir, 0755, true);
+                    }
+
+                    $moved = $file->move($targetDir, $filename);
+
+                    if ($moved === false) {
+                        throw new \RuntimeException('Unable to move uploaded file.');
+                    }
+
+                    $imagePath = 'cars/' . $filename;
+
+                } catch (\Throwable $e) {
+                    return back()->withErrors(['image' => 'Upload failed: ' . $e->getMessage()]);
+                }
+            }
+        }
+
+        $car = Car::create([
+            'license_plate' => $validated['license_plate'],
+            'brand' => $validated['brand'],
+            'model' => $validated['model'],
+            'mileage' => $validated['mileage'],
+            'price' => $validated['price'],
+            'production_year' => $validated['production_year'] ?? null,
+            'color' => $validated['color'] ?? null,
+            'user_id' => auth()->id(),
+            'views' => 0,
+            'sold_at' => null,
+            'image' => $imagePath,
+        ]);
+
+
+        $car->tags()->sync($request->input('tags', []));
+
+        return redirect()
+            ->route('cars.mine')
             ->with('success', 'Auto toegevoegd!');
     }
 
@@ -91,7 +140,7 @@ class CarController extends Controller
 
             $query->where(function ($q) use ($search) {
                 $q->where('brand', 'like', "%{$search}%")
-                  ->orWhere('model', 'like', "%{$search}%");
+                    ->orWhere('model', 'like', "%{$search}%");
             });
         }
 
@@ -101,17 +150,12 @@ class CarController extends Controller
             });
         }
 
-        $cars = $query
-            ->with('tags')
+        $cars = $query->with('tags')
             ->orderBy('created_at', 'desc')
             ->paginate(9)
             ->withQueryString();
 
-        $featuredId = null;
-
-        if ($cars->count() > 0) {
-            $featuredId = $cars->random()->id;
-        }
+        $featuredId = $cars->count() > 0 ? $cars->random()->id : null;
 
         $tags = Tag::all();
 
@@ -135,9 +179,8 @@ class CarController extends Controller
 
     public function edit(Car $car)
     {
-        if ($car->user_id !== auth()->id()) {
+        if ($car->user_id !== auth()->id())
             abort(403);
-        }
 
         $tags = Tag::all();
 
@@ -146,9 +189,8 @@ class CarController extends Controller
 
     public function update(Request $request, Car $car)
     {
-        if ($car->user_id !== auth()->id()) {
+        if ($car->user_id !== auth()->id())
             abort(403);
-        }
 
         $validated = $request->validate([
             'brand' => 'required',
@@ -160,8 +202,7 @@ class CarController extends Controller
         ]);
 
         $car->update($validated);
-
-        $car->tags()->sync($request->tags ?? []);
+        $car->tags()->sync($request->input('tags', []));
 
         return redirect()->route('cars.mine')
             ->with('success', 'Auto aangepast!');
@@ -169,9 +210,8 @@ class CarController extends Controller
 
     public function destroy(Car $car)
     {
-        if ($car->user_id !== auth()->id()) {
+        if ($car->user_id !== auth()->id())
             abort(403);
-        }
 
         $car->delete();
 
@@ -181,9 +221,8 @@ class CarController extends Controller
 
     public function pdf(Car $car)
     {
-        if ($car->user_id !== auth()->id()) {
+        if ($car->user_id !== auth()->id())
             abort(403);
-        }
 
         $pdf = Pdf::loadView('cars.pdf', compact('car'));
 
@@ -192,9 +231,8 @@ class CarController extends Controller
 
     public function toggleSold(Car $car)
     {
-        if ($car->user_id !== auth()->id()) {
+        if ($car->user_id !== auth()->id())
             abort(403);
-        }
 
         $car->sold_at = $car->sold_at ? null : now();
         $car->save();
@@ -204,9 +242,8 @@ class CarController extends Controller
 
     public function updatePrice(Request $request, Car $car)
     {
-        if ($car->user_id !== auth()->id()) {
+        if ($car->user_id !== auth()->id())
             abort(403);
-        }
 
         $request->validate([
             'price' => 'required|numeric'

@@ -14,34 +14,50 @@
         </div>
     </div>
 
-    <form method="POST" action="{{ route('cars.store') }}">
+    <form method="POST"
+          action="{{ route('cars.store') }}"
+          enctype="multipart/form-data">
         @csrf
 
         <input type="hidden"
                name="license_plate"
-               value="{{ $license_plate }}">
+               value="{{ old('license_plate', $license_plate) }}">
+
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
         <input
             type="text"
             name="brand"
             placeholder="Merk"
-            value="{{ $rdw['merk'] ?? '' }}"
+            value="{{ old('brand', $rdw['merk'] ?? '') }}"
             class="track-progress"
+            required
         >
 
         <input
             type="text"
             name="model"
             placeholder="Model"
-            value="{{ $rdw['handelsbenaming'] ?? '' }}"
+            value="{{ old('model', $rdw['handelsbenaming'] ?? '') }}"
             class="track-progress"
+            required
         >
 
         <input
             type="number"
             name="mileage"
             placeholder="Kilometerstand"
+            value="{{ old('mileage') }}"
             class="track-progress"
+            required
         >
 
         <input
@@ -49,14 +65,16 @@
             name="price"
             placeholder="Vraagprijs"
             step="0.01"
+            value="{{ old('price') }}"
             class="track-progress"
+            required
         >
 
         <input
             type="number"
             name="production_year"
             placeholder="Bouwjaar"
-            value="{{ $rdw['bouwjaar'] ?? '' }}"
+            value="{{ old('production_year', $rdw['bouwjaar'] ?? '') }}"
             class="track-progress"
         >
 
@@ -64,9 +82,15 @@
             type="text"
             name="color"
             placeholder="Kleur"
-            value="{{ $rdw['kleur'] ?? '' }}"
+            value="{{ old('color', $rdw['kleur'] ?? '') }}"
             class="track-progress"
         >
+
+        <hr>
+
+        {{-- IMAGE --}}
+        <h5>Afbeelding</h5>
+        <input type="file" name="image" accept="image/*" class="track-progress">
 
         <hr>
 
@@ -85,6 +109,7 @@
                             name="tags[]"
                             value="{{ $tag->id }}"
                             class="track-progress"
+                            {{ in_array($tag->id, old('tags', [])) ? 'checked' : '' }}
                         >
 
                         <span>{{ $tag->name }}</span>
@@ -148,4 +173,5 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 </script>
+
 @endsection
